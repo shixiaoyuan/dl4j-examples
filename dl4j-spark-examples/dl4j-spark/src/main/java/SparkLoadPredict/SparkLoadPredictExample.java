@@ -101,7 +101,7 @@ public class SparkLoadPredictExample {
         dataSet = sc.parallelize(dataSetList);
 
         //Do training
-        for(int i=0;i<2;++i) {
+        for(int i=0;i<10;++i) {
             sparkNetwork.fit(dataSet);
         }
 
@@ -109,27 +109,30 @@ public class SparkLoadPredictExample {
         tm.deleteTempFiles(sc);
         System.out.println("predict successfully!");
 
-//        INDArray indArray = loadPredict.getInitArray(iterator);
-//        List<Tuple2<Integer,INDArray>> lt = new ArrayList<>();
-//        Tuple2<Integer,INDArray> tuple2 = new Tuple2<>(1,indArray);
-//        lt.add(tuple2);
-//        JavaPairRDD<Integer,INDArray> data = sc.parallelizePairs(lt);
+        /** 三种并行化PairRDD的写法
+         * INDArray indArray = loadPredict.getInitArray(iterator);
+        List<Tuple2<Integer,INDArray>> lt = new ArrayList<>();
+        Tuple2<Integer,INDArray> tuple2 = new Tuple2<>(1,indArray);
+        lt.add(tuple2);
+        JavaPairRDD<Integer,INDArray> data = sc.parallelizePairs(lt);
 
-//        JavaRDD<INDArray> data = sc.parallelize(Arrays.asList(indArray));
-//        JavaPairRDD<Integer,INDArray> line = data.mapToPair(x -> {return new Tuple2(1,x);});
-
-//        JavaPairRDD<Integer, INDArray> line = data.mapToPair(new PairFunction<INDArray, Integer, INDArray>() {
-//            @Override
-//            public Tuple2<Integer, INDArray> call(DataSet dataSet) throws Exception {
-//                return new Tuple2<>(1,indArray);
-//            }
-//        });**/
-        INDArray indArray = loadPredict.getInitArray(iterator);
-        SparkSession spark= SparkSession.builder().appName("").getOrCreate();
-        JavaSparkContext jsc = new JavaSparkContext(spark.sparkContext());
-        JavaRDD<INDArray> data = jsc.parallelize(Arrays.asList(indArray));
+        JavaRDD<INDArray> data = sc.parallelize(Arrays.asList(indArray));
         JavaPairRDD<Integer,INDArray> line = data.mapToPair(x -> {return new Tuple2(1,x);});
-        System.out.println(sparkNetwork.feedForwardWithKey(line,1));
+
+        JavaPairRDD<Integer, INDArray> line = data.mapToPair(new PairFunction<INDArray, Integer, INDArray>() {
+            @Override
+            public Tuple2<Integer, INDArray> call(DataSet dataSet) throws Exception {
+                return new Tuple2<>(1,indArray);
+            }
+        });
+         **/
+        INDArray indArray = loadPredict.getInitArray(iterator);
+//        SparkSession spark= SparkSession.builder().appName("").getOrCreate();
+//        JavaSparkContext jsc = new JavaSparkContext(spark.sparkContext());
+        JavaRDD<INDArray> data = sc.parallelize(Arrays.asList(indArray));
+        JavaPairRDD<Integer,INDArray> line = data.mapToPair(x -> {return new Tuple2(1,x);});
+        System.out.println(sparkNetwork.feedForwardWithKey(line,1).values().collect());
+        System.out.println(iterator.getMaxArr()[0]);
 
 
 
@@ -137,7 +140,8 @@ public class SparkLoadPredictExample {
 
 
 
-    /**public static JavaRDD<DataSet> getTrainingData(JavaSparkContext sc) throws IOException {
+    /** SparkLSTMCharacterExample的转换RDD的方法，不过好像不怎么好用，待继续实验
+     * public static JavaRDD<DataSet> getTrainingData(JavaSparkContext sc) throws IOException {
      ArrayList<Integer> list = new ArrayList<>();
      for(int i=0;i<iterator.getSize();++i) {
      list.add(1);

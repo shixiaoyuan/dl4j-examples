@@ -54,7 +54,7 @@ public class LoadPredict {
 
     public static void train(MultiLayerNetwork net, LoadIterator iterator){
         //迭代训练次数
-        for(int i=1;i<=Epochs;i++) {
+        for(int i=1;i<=4;i++) {
             DataSet dataSet = null;
             while (iterator.hasNext()) {
                 dataSet = iterator.next();
@@ -69,13 +69,13 @@ public class LoadPredict {
             //24个时间步长
             for(int j=0;j<24;j++) {
                 INDArray output = net.rnnTimeStep(initArray);
-                System.out.println(output.getDouble(0)*iterator.getMaxArr()[0]+" ");
-                System.out.println(output);
-                RegressionEvaluation eval = net.evaluateRegression(iterator);
-                System.out.println("模型评估："+"\n"+ eval.stats());
+                System.out.print(output.getDouble(0)*iterator.getMaxArr()[0]+" ");
             }
+            RegressionEvaluation eval = net.evaluateRegression(iterator);
+            System.out.println("模型评估："+"\n"+ eval.stats());
             net.rnnClearPreviousState();
         }
+        System.out.println("done");
 
     }
 
