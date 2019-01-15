@@ -183,7 +183,7 @@ public class SparkLSTMCharacterExample {
     }
 
 
-    private static class StringToDataSetFn implements Function<String, DataSet> {
+       private static class StringToDataSetFn implements Function<String, DataSet> {
         private final Broadcast<Map<Character, Integer>> ctiBroadcast;
 
         private StringToDataSetFn(Broadcast<Map<Character, Integer>> characterIntegerMap) {

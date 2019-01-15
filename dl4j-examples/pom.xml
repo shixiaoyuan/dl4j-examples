@@ -13,6 +13,13 @@
 
     <name>DeepLearning4j Examples</name>
 
+    <properties>
+        <jcommander.version>1.27</jcommander.version>
+        <azure.hadoop.version>2.6.5</azure.hadoop.version>
+        <azure.storage.version>2.0.0</azure.storage.version>
+        <spark.version>2.1.0</spark.version>
+    </properties>
+
     <repositories>
         <repository>
             <id>snapshots-repo</id>
@@ -65,6 +72,21 @@
     </dependencyManagement>
 
     <dependencies>
+        <dependency>
+            <groupId>org.deeplearning4j</groupId>
+            <artifactId>dl4j-spark_2.11</artifactId>
+            <version>1.0.0-beta2_spark_2</version>
+        </dependency>
+
+
+        <!--渐变共享 -->
+        <dependency>
+            <groupId>org.deeplearning4j</groupId>
+            <artifactId>dl4j-spark-parameterserver_${scala.binary.version}</artifactId>
+            <version>${dl4j.spark.version}</version>
+        </dependency>
+
+
         <!-- ND4J backend. You need one in every DL4J project. Normally define artifactId as either "nd4j-native-platform" or "nd4j-cuda-9.2-platform" -->
         <dependency>
             <groupId>org.nd4j</groupId>

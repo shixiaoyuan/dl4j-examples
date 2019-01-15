@@ -1,4 +1,4 @@
-package mycode.load;
+package SparkLoadPredict;
 
 import org.deeplearning4j.api.storage.StatsStorage;
 import org.deeplearning4j.eval.RegressionEvaluation;
@@ -10,9 +10,9 @@ import org.deeplearning4j.nn.conf.layers.RnnOutputLayer;
 import org.deeplearning4j.nn.multilayer.MultiLayerNetwork;
 import org.deeplearning4j.nn.weights.WeightInit;
 import org.deeplearning4j.optimize.listeners.ScoreIterationListener;
-import org.deeplearning4j.ui.api.UIServer;
-import org.deeplearning4j.ui.stats.StatsListener;
-import org.deeplearning4j.ui.storage.InMemoryStatsStorage;
+//import org.deeplearning4j.ui.api.UIServer;
+//import org.deeplearning4j.ui.stats.StatsListener;
+//import org.deeplearning4j.ui.storage.InMemoryStatsStorage;
 import org.nd4j.linalg.activations.Activation;
 import org.nd4j.linalg.api.ndarray.INDArray;
 import org.nd4j.linalg.dataset.DataSet;
@@ -97,12 +97,12 @@ public class LoadPredict {
         //初始化深度神经网络
         LoadIterator iterator = new LoadIterator();
         iterator.loadData(inputFile,batchSize,exampleLength);
-        UIServer uiServer = UIServer.getInstance();
-        StatsStorage statsStorage = new InMemoryStatsStorage();
+       // UIServer uiServer = UIServer.getInstance();
+       // StatsStorage statsStorage = new InMemoryStatsStorage();
         MultiLayerNetwork net = getNetModel(IN_NUM,OUT_NUM);
-        int listenerFrequency = 1;
-        net.setListeners(new StatsListener(statsStorage, listenerFrequency));
-        uiServer.attach(statsStorage);
+      //  int listenerFrequency = 1;
+       // net.setListeners(new StatsListener(statsStorage, listenerFrequency));
+        //uiServer.attach(statsStorage);
         train(net, iterator);
 
     }

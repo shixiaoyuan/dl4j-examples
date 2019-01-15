@@ -1,4 +1,4 @@
-package mycode.load;
+package SparkLoadPredict;
 
 import org.nd4j.linalg.api.ndarray.INDArray;
 import org.nd4j.linalg.dataset.DataSet;
@@ -14,7 +14,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.NoSuchElementException;
 
-public class LoadIterator  implements DataSetIterator {
+public class LoadIterator implements DataSetIterator {
 
 
     private static final int VECTOR_SIZE = 4;
