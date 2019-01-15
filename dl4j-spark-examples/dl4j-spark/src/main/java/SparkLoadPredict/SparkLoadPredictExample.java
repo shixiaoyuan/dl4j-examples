@@ -5,6 +5,7 @@ import org.apache.spark.SparkConf;
 import org.apache.spark.api.java.JavaPairRDD;
 import org.apache.spark.api.java.JavaRDD;
 import org.apache.spark.api.java.JavaSparkContext;
+import org.apache.spark.sql.SparkSession;
 import org.apache.spark.api.java.function.Function;
 import org.apache.spark.api.java.function.PairFunction;
 import org.deeplearning4j.nn.api.OptimizationAlgorithm;
@@ -108,21 +109,26 @@ public class SparkLoadPredictExample {
         tm.deleteTempFiles(sc);
         System.out.println("predict successfully!");
 
-        INDArray indArray = loadPredict.getInitArray(iterator);
+//        INDArray indArray = loadPredict.getInitArray(iterator);
 //        List<Tuple2<Integer,INDArray>> lt = new ArrayList<>();
 //        Tuple2<Integer,INDArray> tuple2 = new Tuple2<>(1,indArray);
 //        lt.add(tuple2);
 //        JavaPairRDD<Integer,INDArray> data = sc.parallelizePairs(lt);
 
-        JavaRDD<INDArray> data = sc.parallelize(Arrays.asList(indArray));
+//        JavaRDD<INDArray> data = sc.parallelize(Arrays.asList(indArray));
 //        JavaPairRDD<Integer,INDArray> line = data.mapToPair(x -> {return new Tuple2(1,x);});
 
-        JavaPairRDD<Integer, INDArray> line = data.mapToPair(new PairFunction<INDArray, Integer, INDArray>() {
-            @Override
-            public Tuple2<Integer, INDArray> call(DataSet dataSet) throws Exception {
-                return new Tuple2<>(1,indArray);
-            }
-        });
+//        JavaPairRDD<Integer, INDArray> line = data.mapToPair(new PairFunction<INDArray, Integer, INDArray>() {
+//            @Override
+//            public Tuple2<Integer, INDArray> call(DataSet dataSet) throws Exception {
+//                return new Tuple2<>(1,indArray);
+//            }
+//        });**/
+        INDArray indArray = loadPredict.getInitArray(iterator);
+        SparkSession spark= SparkSession.builder().appName("").getOrCreate();
+        JavaSparkContext jsc = new JavaSparkContext(spark.sparkContext());
+        JavaRDD<INDArray> data = jsc.parallelize(Arrays.asList(indArray));
+        JavaPairRDD<Integer,INDArray> line = data.mapToPair(x -> {return new Tuple2(1,x);});
         System.out.println(sparkNetwork.feedForwardWithKey(line,1));
 
 
