@@ -13,7 +13,7 @@ import java.net.URISyntaxException;
  * @author wangfeng
  */
 public class CommonUtils {
-    public static final String SERVER_PATH = "hdfs://cluster1:9003";//because the 9000 port have been used,so here's 9003
+    public static final String SERVER_PATH = "hdfs://localhost:9000";//because the 9000 port have been used,so here's 9003
 
     public static final String TRAIN_HDFS_PATH = SERVER_PATH + "/user/hadoop/animals/train";
     public static final String VALIDATE_HDFS_PATH = SERVER_PATH + "/user/hadoop/animals/validate";

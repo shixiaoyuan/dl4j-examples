@@ -19,7 +19,10 @@ import org.nd4j.linalg.dataset.DataSet;
 import org.nd4j.linalg.factory.Nd4j;
 import org.nd4j.linalg.learning.config.RmsProp;
 import org.nd4j.linalg.lossfunctions.LossFunctions;
+import org.deeplearning4j.util.ModelSerializer;
 
+import java.io.File;
+import java.io.IOException;
 
 public class LoadPredict {
     private static final int IN_NUM = 4;
@@ -34,7 +37,7 @@ public class LoadPredict {
             .optimizationAlgo(OptimizationAlgorithm.STOCHASTIC_GRADIENT_DESCENT)
             .updater(new RmsProp(0.05))
             .seed(12346)
-            .l2(0.001)
+            .l2(0.002)
             .weightInit(WeightInit.XAVIER)
             .list()
             .layer(0, new LSTM.Builder().nIn(nIn).nOut(lstmLayerSize)
@@ -54,7 +57,7 @@ public class LoadPredict {
 
     public static void train(MultiLayerNetwork net, LoadIterator iterator){
         //迭代训练次数
-        for(int i=1;i<=4;i++) {
+        for(int i=1;i<=20;i++) {
             DataSet dataSet = null;
             while (iterator.hasNext()) {
                 dataSet = iterator.next();
@@ -92,7 +95,7 @@ public class LoadPredict {
     }
     public static void main(String[] args) {
         String inputFile = "/Users/shiyuan/Desktop/essaydata/data.csv";
-        int batchSize = 1;
+        int batchSize = 3;
         int exampleLength = 24;
         //初始化深度神经网络
         LoadIterator iterator = new LoadIterator();
@@ -104,6 +107,24 @@ public class LoadPredict {
         net.setListeners(new StatsListener(statsStorage, listenerFrequency));
         uiServer.attach(statsStorage);
         train(net, iterator);
+
+        //保存模型
+        File locationToSave = new File("/Users/shiyuan/Desktop/LSTM.zip");
+        boolean saveUpdater = true;
+        try {
+            ModelSerializer.writeModel(net, locationToSave, saveUpdater);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        try {
+            MultiLayerNetwork restored = ModelSerializer.restoreMultiLayerNetwork(locationToSave);
+            System.out.println("Saved and loaded parameters are equal:      " + net.params().equals(restored.params()));
+            System.out.println("Saved and loaded configurations are equal:  " + net.getLayerWiseConfigurations().equals(restored.getLayerWiseConfigurations()));
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+
 
     }
 }

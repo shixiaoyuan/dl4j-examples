@@ -108,7 +108,7 @@ public class AnimalModelByHdfsSparkCluster {
         SparkDl4jMultiLayer sparkNetwork = new SparkDl4jMultiLayer(sc, conf, tm);
         sparkNetwork.setCollectTrainingStats(true);
         //remote monitor
-        StatsStorageRouter remoteUIRouter = new RemoteUIStatsStorageRouter("http://cluster2:9000");//tip the port conflict hadoop
+        StatsStorageRouter remoteUIRouter = new RemoteUIStatsStorageRouter("http://localhost:9000");//tip the port conflict hadoop
 
         //StatsStorage statsStorage = new FileStatsStorage(new File(trainMonitorLog));
         //SparkNetwork.setListeners(remoteUIRouter, new StatsListener(statsStorage), new SparkScoreIterationListener(10));

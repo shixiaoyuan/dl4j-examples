@@ -1,4 +1,4 @@
-package mycode.sparkLoadpredict;
+package mycode.saveTohdfs;
 
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.fs.FileSystem;
@@ -20,10 +20,10 @@ public class SaveDataInLocal {
         int exampleLength = 24;
         iterator.loadData(inputFile,batchSize,exampleLength);
 
-        SparkConf sparkConf = new SparkConf();
-        sparkConf.setMaster("local[*]");
-        sparkConf.setAppName("LSTM Load Predict");
-        JavaSparkContext sc = new JavaSparkContext(sparkConf);
+//        SparkConf sparkConf = new SparkConf();
+//        sparkConf.setMaster("local[*]");
+//        sparkConf.setAppName("LSTM Load Predict");
+//        JavaSparkContext sc = new JavaSparkContext(sparkConf);
         Configuration conf = new Configuration();
         conf.addResource(new Path("/Users/shiyuan/hadoop-2.6.5/etc/hadoop/core-site.xml"));
         conf.addResource(new Path("/Users/shiyuan/hadoop-2.6.5/etc/hadoop/hdfs-site.xml"));

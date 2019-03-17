@@ -71,7 +71,7 @@ public class SparkLoadPredictExample {
         if (useSparkLocal) {
             sparkConf.setMaster("local[*]");
         }
-        sparkConf.setAppName("LSTM Character Example");
+        sparkConf.setAppName("LSTM Load Prediction");
         JavaSparkContext sc = new JavaSparkContext(sparkConf);
 
 
@@ -94,20 +94,19 @@ public class SparkLoadPredictExample {
 
 
         List<DataSet> dataSetList = new ArrayList<>();
-        JavaRDD<DataSet> dataSet = null;
         while (iterator.hasNext()) {
             dataSetList.add(iterator.next());
         }
-        dataSet = sc.parallelize(dataSetList);
+        JavaRDD<DataSet> dataSet = sc.parallelize(dataSetList);
 
         //Do training
-        for(int i=0;i<10;++i) {
+        for(int i=0;i<1;++i) {
             sparkNetwork.fit(dataSet);
         }
 
         //Delete the temp training files, now that we are done with them
-        tm.deleteTempFiles(sc);
-        System.out.println("predict successfully!");
+        //tm.deleteTempFiles(sc);
+        System.out.println("training successfully!");
 
         /** 三种并行化PairRDD的写法
          * INDArray indArray = loadPredict.getInitArray(iterator);
@@ -131,10 +130,7 @@ public class SparkLoadPredictExample {
 //        JavaSparkContext jsc = new JavaSparkContext(spark.sparkContext());
         JavaRDD<INDArray> data = sc.parallelize(Arrays.asList(indArray));
         JavaPairRDD<Integer,INDArray> line = data.mapToPair(x -> {return new Tuple2(1,x);});
-        System.out.println(sparkNetwork.feedForwardWithKey(line,1).values().collect());
-        System.out.println(iterator.getMaxArr()[0]);
-
-
+        System.out.println(sparkNetwork.feedForwardWithKey(line,1).values().collect().get(0).getDouble(0)*iterator.getMaxArr()[0]);
 
     }
 

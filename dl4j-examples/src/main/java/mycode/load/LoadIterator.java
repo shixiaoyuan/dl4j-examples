@@ -31,21 +31,17 @@ public class LoadIterator  implements DataSetIterator {
     private List<Integer> dataRecord;
 
     private double[] maxNum;
-    /**
-     * 构造方法
-     * */
+
+    //构造方法
     public LoadIterator(){
         dataRecord = new ArrayList<>();
     }
-
-    /**
-     * 加载数据并初始化
-     * */
 
     public int getSize() {
         return dataList.size();
     }
 
+    //加载数据并初始化
     public boolean loadData(String fileName, int batchNum, int exampleLength){
         this.batchNum = batchNum;
         this.exampleLength = exampleLength;
@@ -75,13 +71,15 @@ public class LoadIterator  implements DataSetIterator {
      * 从文件中读取负载数据
      * */
     public List<LoadData> readDataFromFile(String fileName) throws IOException{
+        for(int i=0;i<maxNum.length;i++){
+            maxNum[i] = 0;
+        }
+
         dataList = new ArrayList<>();
         FileInputStream fis = new FileInputStream(fileName);
         BufferedReader in = new BufferedReader(new InputStreamReader(fis,"UTF-8"));
         String line = in.readLine();
-        for(int i=0;i<maxNum.length;i++){
-            maxNum[i] = 0;
-        }
+
         System.out.println("读取数据..");
         while(line!=null){
             String[] strArr = line.split(",");
@@ -143,7 +141,7 @@ public class LoadIterator  implements DataSetIterator {
         INDArray label = Nd4j.create(new int[]{actualBatchSize,1,actualLength}, 'f');
         LoadData nextData = null,curData = null;
 
-        //获取每批次的训练数据和标签数据
+        //获取每批次的训练数据和标签数据,一次循环一个完整时间步长
         for(int i=0;i<actualBatchSize;i++){
             int index = dataRecord.remove(0);
             int endIndex = Math.min(index+exampleLength,dataList.size()-1);
@@ -159,12 +157,11 @@ public class LoadIterator  implements DataSetIterator {
                 input.putScalar(new int[]{i, 3, c}, curData.getHum()/maxNum[3]);
 
                 //构造label向量
-                label.putScalar(new int[]{i, 0, c}, nextData.getLoad()/maxNum[0]);
+                label.putScalar(new int[]{i, 0, c}, ((nextData!=null)?nextData.getLoad():0.8*maxNum[0])/maxNum[0]);
                 curData = nextData;
             }
-            if(dataRecord.size()<=0) {
+            if(dataRecord.size()<=0)
                 break;
-            }
         }
 
         return new DataSet(input, label);

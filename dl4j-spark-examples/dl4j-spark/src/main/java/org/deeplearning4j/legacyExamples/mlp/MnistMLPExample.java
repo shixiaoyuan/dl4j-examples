@@ -74,7 +74,7 @@ public class MnistMLPExample {
 
         SparkConf sparkConf = new SparkConf();
         if (useSparkLocal) {
-            sparkConf.setMaster("local[*]");
+            sparkConf.setMaster("loc*al[]");
         }
         sparkConf.setAppName("DL4J Spark MLP Example");
         JavaSparkContext sc = new JavaSparkContext(sparkConf);
