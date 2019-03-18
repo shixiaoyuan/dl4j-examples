@@ -157,7 +157,7 @@ public class LoadIterator  implements DataSetIterator {
                 input.putScalar(new int[]{i, 3, c}, curData.getHum()/maxNum[3]);
 
                 //构造label向量
-                label.putScalar(new int[]{i, 0, c}, ((nextData!=null)?nextData.getLoad():0.8*maxNum[0])/maxNum[0]);
+                label.putScalar(new int[]{i, 0, c}, nextData.getLoad()/maxNum[0]);
                 curData = nextData;
             }
             if(dataRecord.size()<=0)
@@ -217,5 +217,9 @@ public class LoadIterator  implements DataSetIterator {
     @Override
     public boolean asyncSupported() {
         return true;
+    }
+
+    public LoadData getdata(int index) {
+        return dataList.get(index);
     }
 }
