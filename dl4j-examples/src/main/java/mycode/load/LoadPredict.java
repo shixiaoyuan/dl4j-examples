@@ -32,6 +32,7 @@ public class LoadPredict {
     private static final int lstmLayerSize = 8;
 
     public static MultiLayerNetwork getNetModel(int nIn, int nOut) {
+        System.out.print("this is a test");
         //神经网络参数
         MultiLayerConfiguration conf = new NeuralNetConfiguration.Builder()
             .optimizationAlgo(OptimizationAlgorithm.STOCHASTIC_GRADIENT_DESCENT)
